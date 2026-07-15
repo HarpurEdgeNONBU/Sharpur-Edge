@@ -36,24 +36,16 @@
     }
     .bar-seg-grow { flex: 1 1 auto; }
 
-    @media (min-width: 900px) {
-      .reader-header {
-        position: relative;
-      }
+    /* Keep page navigation in the normal toolbar flow. Its own centred row
+       stays clear of titles, zoom controls, and downloads at every desktop
+       width instead of relying on absolute positioning. */
+    @media (min-width: 601px) {
       .reader-nav {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        order: 4;
+        flex: 1 0 100%;
         justify-content: center;
-        z-index: 1;
       }
-      .reader-actions {
-        margin-left: auto;
-      }
-      .reader-header > .bar-seg:first-of-type {
-        max-width: calc(50% - 150px);
-      }
+      #statusMsg { order: 5; }
     }
 
     .btn-icon img {
@@ -342,6 +334,9 @@
       #stageWrap {
         width: 100%;
         max-width: 100%;
+        /* One finger remains available to StPageFlip. Two-finger panning is
+           handled below so readers can inspect a zoomed page. */
+        touch-action: none;
       }
       #sidePanel {
         flex: none;
@@ -817,6 +812,64 @@
     resizeFlipbook(1.0);
   }
 
+  // ----------------------------------------------------------------
+  // MOBILE PAN: Preserve StPageFlip's one-finger page turn, while using
+  // two fingers to move around an overflowing (zoomed) page.
+  // ----------------------------------------------------------------
+  function initTwoFingerPan() {
+    let isPanning = false;
+    let startX = 0;
+    let startY = 0;
+    let startScrollLeft = 0;
+    let startScrollTop = 0;
+
+    const canPan = () => stageWrap.scrollWidth > stageWrap.clientWidth
+      || stageWrap.scrollHeight > stageWrap.clientHeight;
+    const midpoint = touches => ({
+      x: (touches[0].clientX + touches[1].clientX) / 2,
+      y: (touches[0].clientY + touches[1].clientY) / 2
+    });
+    const beginPan = touches => {
+      const point = midpoint(touches);
+      isPanning = true;
+      startX = point.x;
+      startY = point.y;
+      startScrollLeft = stageWrap.scrollLeft;
+      startScrollTop = stageWrap.scrollTop;
+    };
+    const capturePanGesture = event => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    // Capture these before the page-flip library receives the gesture.
+    stageWrap.addEventListener('touchstart', event => {
+      if (event.touches.length < 2 || !canPan()) return;
+      beginPan(event.touches);
+      capturePanGesture(event);
+    }, { capture: true, passive: false });
+
+    stageWrap.addEventListener('touchmove', event => {
+      if (!isPanning || event.touches.length < 2) return;
+      const point = midpoint(event.touches);
+      stageWrap.scrollLeft = startScrollLeft - (point.x - startX);
+      stageWrap.scrollTop = startScrollTop - (point.y - startY);
+      capturePanGesture(event);
+    }, { capture: true, passive: false });
+
+    const endPan = event => {
+      if (!isPanning) return;
+      if (event.touches.length >= 2) {
+        beginPan(event.touches);
+      } else {
+        isPanning = false;
+      }
+      capturePanGesture(event);
+    };
+    stageWrap.addEventListener('touchend', endPan, { capture: true, passive: false });
+    stageWrap.addEventListener('touchcancel', endPan, { capture: true, passive: false });
+  }
+
   function bindBookEvents() {
     book.on('flip', e => {
       const idx = e.data;
@@ -1189,6 +1242,7 @@
 
     // Show the mobile "view on desktop" banner regardless of load outcome.
     initMobileNotice();
+    initTwoFingerPan();
 
     // 1. Get magazine ID from URL  ?id=mentor-magic-spring-2026
     const params = new URLSearchParams(window.location.search);
