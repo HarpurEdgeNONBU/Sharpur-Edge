@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sharpur Edge Library</title>
+
+  <!-- Shared design tokens (colors, fonts, buttons) -->
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    /* =============================================================
+       ARCHIVE PAGE STYLES
+       Most visual customization should happen in assets/style.css.
+       Only archive-specific layout is here.
+       ============================================================= */
+
+    /* ---- Header layout ---- */
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* ---- Hero section ---- */
+    .hero {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 24px 36px;
+    }
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: normal;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .hero p {
+      color: var(--text-mid);
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* ---- Search + Filter toolbar ---- */
+    .toolbar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Search input */
+    .search-wrap {
+      position: relative;
+      flex: 1 1 260px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      opacity: 1;
+    }
+    
+    #searchInput {
+      width: 100%;
+      padding: 9px 12px 9px 55px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+    #searchInput:focus { border-color: var(--accent); }
+    #searchInput::placeholder { color: var(--text-light); }
+    #searchInput:focus-visible,
+    #sortSelect:focus-visible {
+      border-color: var(--accent);
+    }
+
+    /* Filter pill buttons */
+    .filter-group {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 6px 13px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: var(--surface);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .filter-btn:hover,
+    .filter-btn[aria-pressed="true"] {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-bg);
+    }
+    .filter-btn:focus-visible {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+
+    /* Sort dropdown */
+    #sortSelect {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      cursor: pointer;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    #sortSelect:focus { border-color: var(--accent); }
+
+    /* ---- Result count line ---- */
+    .result-info {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 16px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      min-height: 1.2em; /* Prevent layout jump */
+    }
+
+    /* ---- Magazine grid ---- */
+    .grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 72px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 32px 24px;
+    }
+
+    /* ---- Magazine card ---- */
+    .mag-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .mag-card:hover .cover-frame {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+    }
+    .mag-card:focus-visible {
+      border-radius: var(--radius);
+    }
+    .mag-card:focus-visible .cover-frame {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+    }
+    .cover-frame {
+      aspect-ratio: 8.5 / 11;  /* Standard magazine ratio */
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+      transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .cover-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Placeholder when no cover image exists */
+    .cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #F0EDE8;
+      color: var(--text-light);
+      font-size: 2.25rem;
+    }
+    .cover-placeholder span {
+      font-size: 0.7rem;
+      font-family: var(--font-sans);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .mag-title {
+      margin-top: 11px;
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      line-height: 1.35;
+    }
+    .mag-meta {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 3px;
+    }
+
+    /* ---- State messages (loading / empty / error) ---- */
+    .state-box {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-mid);
+    }
+    .state-box .icon {
+      font-size: 2.5rem;
+      display: block;
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin: 0 auto 12px;
+    }
+    .state-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+    .state-box small {
+      color: var(--text-light);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    .state-box code {
+      background: #F0EDE8;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.8em;
+    }
+
+    /* ---- Loading skeleton animation ---- */
+    .skeleton .cover-frame {
+      background: linear-gradient(90deg, #EEECEA 25%, #E3E0DB 50%, #EEECEA 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+    }
+    .skeleton .mag-title {
+      height: 12px;
+      width: 65%;
+      margin: 11px auto 4px;
+      background: #E3E0DB;
+      border-radius: 3px;
+    }
+    .skeleton .mag-meta {
+      height: 10px;
+      width: 40%;
+      margin: 0 auto;
+      background: #EEECEA;
+      border-radius: 3px;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 20px 24px;
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* ---- Mobile ---- */
+    @media (max-width: 640px) {
+      .header-inner { padding: 0 16px; }
+      .hero  { padding: 32px 16px 28px; }
+      .toolbar { padding: 0 16px 24px; }
+      .result-info { padding: 0 16px 12px; }
+      .grid  { padding: 0 16px 56px; gap: 24px 16px;
+               grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="index.html" aria-label="Sharpur Edge - home">
+      <img src="assets/sharpur-edge-logo.svg" alt="Sharpur Edge" height="32">
+    </a>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero">
+  <h1>Library</h1>
+  <p>Browse and read past issues of Sharpur Edge.</p>
+</section>
+
+<!-- ============================================================
+     SEARCH + FILTERS
+     ============================================================ -->
+<div class="toolbar" role="search">
+  <div class="search-wrap">
+    <img class="search-icon" src="assets/pips/over-the-hedge-pip.svg" alt="Pip Mascot peeking through a Bush with Binoculars" aria-hidden="true" width="30" height="30">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Search issues..."
+      aria-label="Search magazines"
+      autocomplete="off"
+    >
+  </div>
+
+  <!-- Filter buttons are generated dynamically from magazines.json -->
+  <div class="filter-group" id="filterGroup" role="group" aria-label="Filter by year or category"></div>
+  <select id="sortSelect" aria-label="Sort magazines">
+  <option value="newest">Newest first</option>
+  <option value="oldest">Oldest first</option>
+  <option value="title">Title A-Z</option>
+</select>
+</div>
+
+<!-- Result count (updated dynamically) -->
+<div class="result-info" id="resultInfo" aria-live="polite"></div>
+
+<!-- ============================================================
+     MAIN GRID
+     ============================================================ -->
+<main>
+  <div class="grid" id="grid" aria-label="Magazine collection"></div>
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <p>Sharpur Edge Archive 2026</p>
+</footer>
+
+
+<script>
+  /* ================================================================
+     ARCHIVE PAGE - JAVASCRIPT
+     ----------------------------------------------------------------
+      FUTURE EMPLOYEES: Do NOT edit this script.
+        All magazine data lives in library/magazines.json.
+        To add a new issue, edit that JSON file - not this page.
+     ================================================================ */
+
+  // ----------------------------------------------------------------
+  // State
+  // ----------------------------------------------------------------
+  let allMagazines = [];       // Full list loaded from magazines.json
+  let activeFilters = new Set(); // Active year/category filters
+  let searchQuery   = "";       // Current search string
+
+  // ----------------------------------------------------------------
+  // DOM references
+  // ----------------------------------------------------------------
+  const grid        = document.getElementById('grid');
+  const filterGroup = document.getElementById('filterGroup');
+  const resultInfo  = document.getElementById('resultInfo');
+  const searchInput = document.getElementById('searchInput');
+
+  // ----------------------------------------------------------------
+  // STEP 1: Load magazine data from config file
+  // ----------------------------------------------------------------
+  async function loadMagazines() {
+    showSkeletons(8);
+
+    try {
+      const response = await fetch('library/magazines.json');
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
+      allMagazines = await response.json();
+
+      if (!Array.isArray(allMagazines)) {
+        throw new Error('magazines.json should be a JSON array');
+      }
+
+      buildFilters();
+      renderGrid();
+
+    } catch (err) {
+      console.error('Failed to load magazines.json:', err);
+      grid.innerHTML = `
+        <div class="state-box">
+          <strong>Could not load the magazine list.</strong>
+          <small>
+            Make sure <code>library/magazines.json</code> exists and is valid JSON.<br>
+            This page must be served from a web server (not opened as a file).<br>
+            <br>Error: ${err.message}
+          </small>
+        </div>`;
+    }
+  }
+
+  // ----------------------------------------------------------------
+  // STEP 2: Build filter pills from unique years + categories
+  // ----------------------------------------------------------------
+  function buildFilters() {
+    // Collect unique years (newest first) and categories
+    const years = [...new Set(allMagazines.map(m => m.year).filter(Boolean))]
+      .sort((a, b) => b.localeCompare(a));
+    const cats = [...new Set(allMagazines.map(m => m.category).filter(Boolean))];
+
+    filterGroup.innerHTML = "";
+
+    // "All" pill - clears all filters
+    filterGroup.appendChild(
+      makeFilterPill("All", () => {
+        activeFilters.clear();
+        syncFilterUI();
+        renderGrid();
+      })
+    );
+
+    // Year pills
+    years.forEach(y => {
+      filterGroup.appendChild(makeFilterPill(y, () => toggleFilter(y)));
+    });
+
+    // Category pills
+    cats.forEach(c => {
+      filterGroup.appendChild(makeFilterPill(c, () => toggleFilter(c)));
+    });
+
+    syncFilterUI();
+  }
+
+  // Create a single filter pill button
+  function makeFilterPill(label, onClick) {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = label;
+    btn.dataset.value = label;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', () => {
+      onClick();
+      syncFilterUI();
+    });
+    return btn;
+  }
+
+  // Toggle a filter value on/off
+  function toggleFilter(value) {
+    if (activeFilters.has(value)) {
+      activeFilters.delete(value);
+    } else {
+      activeFilters.add(value);
+    }
+    renderGrid();
+  }
+
+  // Update aria-pressed state on all filter pills
+  function syncFilterUI() {
+    filterGroup.querySelectorAll('.filter-btn').forEach(btn => {
+      const val = btn.dataset.value;
+      const isAll = val === 'All';
+      const isActive = isAll ? activeFilters.size === 0 : activeFilters.has(val);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  // ----------------------------------------------------------------
+  // STEP 3: Filter and render the grid
+  // ----------------------------------------------------------------
+  function getFilteredMagazines() {
+    let results = allMagazines.filter(mag => {
+      if (activeFilters.size > 0) {
+        const matchesYear     = mag.year     && activeFilters.has(mag.year);
+        const matchesCategory = mag.category && activeFilters.has(mag.category);
+        if (!matchesYear && !matchesCategory) return false;
+      }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const haystack = [mag.title, mag.year, mag.category, mag.description]
+          .filter(Boolean).join(' ').toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+
+    const sort = document.getElementById('sortSelect').value;
+    results.sort((a, b) => {
+      if (sort === 'newest') return (b.year || '').localeCompare(a.year || '');
+      if (sort === 'oldest') return (a.year || '').localeCompare(b.year || '');
+      if (sort === 'title')  return (a.title || '').localeCompare(b.title || '');
+      return 0;
+    });
+
+    return results;
+  }
+
+  function renderGrid() {
+    const filtered = getFilteredMagazines();
+
+    // Update result count
+    if (allMagazines.length > 0) {
+      resultInfo.textContent = `Showing ${filtered.length} of ${allMagazines.length} issue${allMagazines.length !== 1 ? 's' : ''}`;
+    }
+
+    // Empty state
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="state-box">
+          <img class="icon" src="assets/pips/exploring-pip.png" alt="" aria-hidden="true" width="" height="">
+          <strong>No magazines match your search.</strong>
+          <small>Try clearing the search or removing filters.</small>
+        </div>`;
+      return;
+    }
+
+    // Render cards
+    grid.innerHTML = "";
+    filtered.forEach(mag => grid.appendChild(buildCard(mag)));
+  }
+
+  // ----------------------------------------------------------------
+  // Build a single magazine card element
+  // ----------------------------------------------------------------
+  function buildCard(mag) {
+    const link = document.createElement('a');
+    link.className = 'mag-card';
+    link.href      = `reader.html?id=${encodeURIComponent(mag.id)}`;
+    link.setAttribute('aria-label', `Read ${mag.title}`);
+
+    // Cover image (with placeholder fallback)
+    const frame = document.createElement('div');
+    frame.className = 'cover-frame';
+
+    if (mag.cover) {
+      const img    = document.createElement('img');
+      img.src      = mag.cover;
+      img.alt      = `Cover of ${mag.title}`;
+      img.loading  = 'lazy';
+      img.width    = 400;
+      img.height   = 518;
+      // If image fails to load, show placeholder
+      img.onerror  = () => {
+        frame.innerHTML = '<div class="cover-placeholder">:(<span>No cover</span></div>';
+      };
+      frame.appendChild(img);
+    } else {
+      frame.innerHTML = '<div class="cover-placeholder">:(<span>No cover</span></div>';
+    }
+
+    // Title
+    const titleEl = document.createElement('div');
+    titleEl.className   = 'mag-title';
+    titleEl.textContent = mag.title;
+
+    // Metadata (year / category)
+    const metaEl = document.createElement('div');
+    metaEl.className   = 'mag-meta';
+    metaEl.textContent = [mag.year, mag.category].filter(Boolean).join(' / ');
+
+    link.appendChild(frame);
+    link.appendChild(titleEl);
+    link.appendChild(metaEl);
+
+    return link;
+  }
+
+  // ----------------------------------------------------------------
+  // Show skeleton loading cards while data is fetching
+  // ----------------------------------------------------------------
+  function showSkeletons(count) {
+    grid.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+      const div = document.createElement('div');
+      div.className = 'mag-card skeleton';
+      div.setAttribute('aria-hidden', 'true');
+      div.innerHTML = `
+        <div class="cover-frame"></div>
+        <div class="mag-title"></div>
+        <div class="mag-meta"></div>`;
+      grid.appendChild(div);
+    }
+  }
+
+  // ----------------------------------------------------------------
+  // Search handler
+  // ----------------------------------------------------------------
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim();
+    renderGrid();
+  });
+
+  document.getElementById('sortSelect').addEventListener('change', renderGrid);
+
+  // ----------------------------------------------------------------
+  // Initialize on page load
+  // ----------------------------------------------------------------
+  loadMagazines();
+</script>
+</body>
+</html>

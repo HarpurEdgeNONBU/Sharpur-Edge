@@ -1,0 +1,21 @@
+This page is the document ideas for future improvements for this project.
+Feel free to add anything you would like to change. 
+Please feel free to also implement these changes.
+
+
+
+-------------------------------------------------------------------
+William's notes - Contact: Williamx9455@gmail.com ; 3473254401
+I also have the "original repo" in case something irreversible and bad has happened.
+-------------------------------------------------------------------
+1. The flipbook is mostly image/canvas based. Maybe we can use another method that utilizes the original .PDFs?
+2. There are some contrast issues, and I haven't changed played around with the fonts (included in the files)
+3. ambiguous controls could use some icons and alt text
+4. Buttons don't have a :focus-visible style for keyboard Users
+5. 
+
+
+
+
+
+-------------------------------------------------------------------

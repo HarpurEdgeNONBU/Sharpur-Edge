@@ -1,0 +1,16 @@
+root: ""            # empty = auto (parent of manager/)
+output:
+  pages_dir: "library/pages"
+  covers_dir: "library/covers"
+  data_dir: "library/page-text"
+  pdfs_dir: "library/pdfs"
+image:
+  format: "webp"
+  page_dpi: 300
+  cover_dpi: 200
+  quality: 82
+categories:
+  - "Fall Issue"
+  - "Spring Issue"
+  - "Summer Issue"
+  - "Winter Issue"

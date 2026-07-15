@@ -1,0 +1,62 @@
+[
+  {
+    "id": "take-charge-fall-2023",
+    "title": "Take Charge",
+    "year": "2023",
+    "category": "Fall Issue",
+    "pageCount": 16,
+    "pdf": "library/pdfs/take-charge-fall-2023.pdf",
+    "cover": "library/covers/take-charge-fall-2023.webp",
+    "description": "take charge"
+  },
+  {
+    "id": "find-your-edge-fall-2024",
+    "title": "Find Your Edge",
+    "year": "2024",
+    "category": "Fall Issue",
+    "pageCount": 16,
+    "pdf": "library/pdfs/find-your-edge-fall-2024.pdf",
+    "cover": "library/covers/find-your-edge-fall-2024.webp",
+    "description": "find your edge blah blah"
+  },
+  {
+    "id": "arts-issue-fall-2025",
+    "title": "The Arts Issue",
+    "year": "2025",
+    "category": "Fall Issue",
+    "pageCount": 14,
+    "pdf": "library/pdfs/arts-issue-fall-2025.pdf",
+    "cover": "library/covers/arts-issue-fall-2025.webp",
+    "description": "Explore the wonders of art or something"
+  },
+  {
+    "id": "dream-big-spring-2024",
+    "title": "Dream Big",
+    "year": "2024",
+    "category": "Spring Issue",
+    "pageCount": 16,
+    "pdf": "library/pdfs/dream-big-spring-2024.pdf",
+    "cover": "library/covers/dream-big-spring-2024.webp",
+    "description": ""
+  },
+  {
+    "id": "humanities",
+    "title": "Humanities",
+    "year": "2026",
+    "category": "Fall Issue",
+    "pageCount": 24,
+    "pdf": "library/pdfs/humanities.pdf",
+    "cover": "library/covers/humanities.webp",
+    "description": ""
+  },
+  {
+    "id": "body-as-site-final-project-proposal-1",
+    "title": "Body As Site _ Final Project Proposal (1)",
+    "year": "1212",
+    "category": "Spring Issue",
+    "pageCount": 1,
+    "pdf": "library/pdfs/body-as-site-final-project-proposal-1.pdf",
+    "cover": "library/covers/body-as-site-final-project-proposal-1.webp",
+    "description": ""
+  }
+]

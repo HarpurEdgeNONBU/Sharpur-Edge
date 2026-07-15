@@ -1,0 +1,171 @@
+SETTING UP GITHUB ON A FRESH COMPUTER
+
+This guide assumes someone has just downloaded or copied this Magazine Archive repo onto a new computer and wants the admin dashboard's Git buttons to work.
+
+
+1. Install Git
+
+Go to:
+
+https://git-scm.com/downloads
+
+Download and install Git for your operating system.
+
+On Windows, the default installer options are usually fine.
+
+
+2. Open a terminal in the archive folder
+
+Open Command Prompt, PowerShell, or Terminal.
+
+Navigate into the folder that contains this repo.
+
+Example on Windows:
+
+cd C:\Users\YourName\Magazine-Archive
+
+
+3. Check whether this folder is already a Git repo
+
+Run:
+
+git status
+
+If you see branch/status information, this folder is already connected to Git.
+
+If you see a message like "not a git repository", the folder was probably downloaded as a ZIP instead of cloned. Continue to step 4.
+
+
+4. Best option: clone the repo from GitHub
+
+If possible, clone the repo instead of using a ZIP download.
+
+Go to the GitHub repo page, click Code, copy the HTTPS URL, then run:
+
+git clone REPO_URL
+
+Example:
+
+git clone https://github.com/USERNAME/REPO-NAME.git
+
+Then enter the cloned folder:
+
+cd REPO-NAME
+
+This is the cleanest setup because Git automatically creates the connection to GitHub.
+
+
+5. If using an already-downloaded folder, initialize Git
+
+Only do this if "git status" said the folder is not a Git repository.
+
+Run:
+
+git init
+
+Then connect it to the correct GitHub repo:
+
+git remote add origin REPO_URL
+
+Example:
+
+git remote add origin https://github.com/USERNAME/REPO-NAME.git
+
+
+6. Confirm the GitHub remote
+
+Run:
+
+git remote -v
+
+You should see something like:
+
+origin  https://github.com/USERNAME/REPO-NAME.git (fetch)
+origin  https://github.com/USERNAME/REPO-NAME.git (push)
+
+This URL controls where the dashboard's "Push to GitHub" button sends changes.
+
+If it points to the wrong repo, change it:
+
+git remote set-url origin CORRECT_REPO_URL
+
+
+7. Set your Git name and email
+
+Git needs a name and email for commits.
+
+Run:
+
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+
+Use the email address associated with your GitHub account if possible.
+
+
+8. Sign in to GitHub for pushing
+
+The first time you run:
+
+git push
+
+Git may ask you to sign in through a browser or Git Credential Manager.
+
+Follow the prompts and sign in with the GitHub account that has permission to push to the repo.
+
+If the account does not have permission, GitHub will reject the push.
+
+
+9. If this is a fork or another person's copy
+
+The dashboard does not choose a GitHub account by itself.
+
+It runs normal Git commands.
+
+"Push to GitHub" pushes to whatever repo is listed by:
+
+git remote -v
+
+So:
+
+- If origin points to your fork, it pushes to your fork.
+- If origin points to the original repo, it tries to push to the original repo.
+- If you do not have permission to push there, the push will fail.
+
+
+10. Using the admin dashboard buttons
+
+Once Git is set up:
+
+- Pull latest: downloads new changes from GitHub.
+- Status: shows what branch you are on and which files changed.
+- Commit changes: saves your local changes into Git history.
+- Push to GitHub: uploads committed changes to the configured GitHub repo.
+
+Recommended workflow:
+
+1. Click Pull latest.
+2. Make changes in the archive manager.
+3. Click Status and review changed files.
+4. Type a clear commit message.
+5. Click Commit changes.
+6. Click Push to GitHub.
+
+
+11. Quick troubleshooting
+
+If Push does nothing or fails:
+
+Run this in the repo folder:
+
+git status
+git remote -v
+git branch -vv
+
+Check that:
+
+- Git is installed.
+- You are inside the correct folder.
+- origin points to the correct GitHub repo.
+- You are signed in with an account that has push permission.
+- You committed changes before trying to push.
+
