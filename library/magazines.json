@@ -48,5 +48,15 @@
     "pdf": "library/pdfs/humanities.pdf",
     "cover": "library/covers/humanities.webp",
     "description": ""
+  },
+  {
+    "id": "mentor-magic-final-sharpur-edge-s25",
+    "title": "Mentor Magic Final  Sharpur Edge S25",
+    "year": "2025",
+    "category": "Spring Issue",
+    "pageCount": 16,
+    "pdf": "library/pdfs/mentor-magic-final-sharpur-edge-s25.pdf",
+    "cover": "library/covers/mentor-magic-final-sharpur-edge-s25.webp",
+    "description": ""
   }
 ]

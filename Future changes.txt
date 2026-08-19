@@ -12,7 +12,7 @@ I also have the "original repo" in case something irreversible and bad has happe
 2. There are some contrast issues, and I haven't changed played around with the fonts (included in the files)
 3. ambiguous controls could use some icons and alt text
 4. Buttons don't have a :focus-visible style for keyboard Users
-5. 
+5. pdf/webp not clear in phone, not super accessible in the phone
 
 
 
