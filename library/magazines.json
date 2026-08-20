@@ -58,5 +58,15 @@
     "pdf": "library/pdfs/mentor-magic-final-sharpur-edge-s25.pdf",
     "cover": "library/covers/mentor-magic-final-sharpur-edge-s25.webp",
     "description": ""
+  },
+  {
+    "id": "william-xu-cv",
+    "title": "William Xu Cv",
+    "year": "1987",
+    "category": "Summer Issue",
+    "pageCount": 1,
+    "pdf": "library/pdfs/william-xu-cv.pdf",
+    "cover": "library/covers/william-xu-cv.webp",
+    "description": ""
   }
 ]
